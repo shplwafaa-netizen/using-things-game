@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>استخدام الأشياء مع صديقي</title>
+<style>
+:root{--primary:#4f46e5;--primary-dark:#3730a3;--success:#10b981;--warning:#f59e0b;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#eef2ff 0%,#f8fafc 50%,#fef3c7 100%);color:var(--text);min-height:100vh;padding:16px;display:flex;flex-direction:column;align-items:center}
+.app{width:100%;max-width:850px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;background:rgba(255,255,255,0.9);padding:12px 20px;border-radius:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05)}
+.brand{font-size:1.3rem;font-weight:900;color:var(--primary);display:flex;align-items:center;gap:8px}
+.brand-icon{background:var(--primary);color:#fff;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.tag{background:#ede9fe;color:var(--primary-dark);font-size:0.85rem;font-weight:bold;padding:6px 14px;border-radius:999px}
+.panel{background:var(--card);border:2px solid var(--border);border-radius:28px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,0.05);text-align:center}
+.hidden{display:none!important}
+.hero h1{font-size:2rem;margin-bottom:12px}
+.hero p{color:var(--muted);font-size:1.1rem;line-height:1.8;max-width:600px;margin:0 auto 24px}
+button{cursor:pointer;border:none;font-size:1.1rem;font-weight:bold;border-radius:18px;transition:0.2s}
+.btn-primary{background:var(--primary);color:white;padding:14px 32px;box-shadow:0 5px 0 var(--primary-dark)}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 2px 0 var(--primary-dark)}
+.btn-secondary{background:#f1f5f9;color:var(--text);padding:10px 20px;border:2px solid #cbd5e1}
+.chars{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px;margin:24px 0}
+.char-card{background:#f8fafc;border:3px solid var(--border);border-radius:20px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.char-card.selected{border-color:var(--primary);background:#eef2ff;transform:scale(1.05)}
+.char-avatar{font-size:3rem;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:50%;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+.game-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #f1f5f9}
+.companion{display:flex;align-items:center;gap:12px}
+.companion-badge{font-size:2.5rem;background:#eef2ff;width:65px;height:65px;display:flex;align-items:center;justify-content:center;border-radius:20px;border:2px solid #c7d2fe}
+.progress-box{text-align:left;min-width:130px}
+.progress-bar{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--success));width:0%;transition:0.3s}
+.target-box{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:24px;padding:16px;margin-bottom:16px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.target-img{width:100%;max-width:250px;height:170px;object-fit:cover;border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
+.bubble{background:#eef2ff;border:2px solid #c7d2fe;border-radius:20px;padding:10px 22px;font-size:1.5rem;font-weight:900;color:var(--primary-dark)}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:650px){.choices{grid-template-columns:1fr}}
+.choice{background:#fff;border:3px solid var(--border);border-radius:20px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.choice img{width:100%;height:140px;object-fit:cover;border-radius:14px}
+.choice strong{font-size:1.2rem}
+.choice.correct{border-color:var(--success)!important;background:#ecfdf5!important}
+.choice.wrong{border-color:var(--warning)!important;background:#fffbeb!important}
+.feedback{min-height:36px;margin-top:16px;font-size:1.2rem;font-weight:900;color:var(--primary-dark)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-icon">★</div><span>استخدام الأشياء</span></div>
+    <span class="tag">تدريب تخاطب</span>
+  </header>
+
+  <section id="s-welcome" class="panel hero">
+    <h1>أهلاً بك يا بطل! 🌟</h1>
+    <p>سنتعلم اليوم ماذا نفعل بالأشياء التي نستخدمها يومياً! اختر صديقك ليسألك بصوته ويشجعك في كل سؤال.</p>
+    <button class="btn-primary" onclick="show('s-choose')">هيا نبدأ!</button>
+  </section>
+
+  <section id="s-choose" class="panel hidden">
+    <h2>اختر صديقك المفضل</h2>
+    <div class="chars" id="char-list"></div>
+    <button class="btn-primary" onclick="start()">✓ ابدأ التدريب</button>
+  </section>
+
+  <section id="s-game" class="panel hidden">
+    <div class="game-head">
+      <div class="companion">
+        <div class="companion-badge" id="c-badge">🐱</div>
+        <div style="text-align:right"><h3 id="c-name">لولو</h3><span style="font-size:0.8rem;color:var(--muted)">يسألك ويشجعك</span></div>
+      </div>
+      <div class="progress-box">
+        <span id="p-text" style="font-size:0.85rem;font-weight:bold;color:var(--muted)">السؤال 1 من 6</span>
+        <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="target-box">
+      <img id="t-img" class="target-img" src="" alt="الشيء" />
+      <div class="bubble" id="q-bubble">إيش نسوي بالكرسي؟</div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <button class="btn-secondary" onclick="speakQ()">🔊 اسمع السؤال بصوت صديقك</button>
+    </div>
+
+    <div class="choices" id="c-grid"></div>
+    <div class="feedback" id="f-msg">اختر الصورة الصحيحة 😊</div>
+
+    <div style="margin-top:14px">
+      <button class="btn-primary hidden" id="b-next" onclick="nextQ()">السؤال التالي ←</button>
+    </div>
+  </section>
+
+  <section id="s-finish" class="panel hidden">
+    <div style="font-size:4.5rem;margin-bottom:10px">🏆</div>
+    <h2 style="font-size:1.8rem;margin-bottom:6px">أحسنت يا بطل الأبطال!</h2>
+    <div style="font-size:2rem;color:#f59e0b;margin-bottom:14px">★★★★★</div>
+    <p style="color:var(--muted);font-size:1.1rem;margin-bottom:20px">تعرفت على استخدام جميع الأشياء بنجاح وبشكل رائع!</p>
+    <button class="btn-primary" onclick="restart()">العب مرة أخرى ↻</button>
+  </section>
+</div>
+
+<script>
+const chars=[
+  {id:'lulu',name:'لولو كاتي',avatar:'🐱',pitch:1.6,rate:0.9,msg:'مرحباً يا بطل! أنا لولو، هيا نتدرب معاً!'},
+  {id:'sponge',name:'سبونج بوب',avatar:'🧽',pitch:1.8,rate:1.0,msg:'أهلاً يا صديقي! أنا سبونج بوب، جاهز للتدريب!'},
+  {id:'superman',name:'سوبر مان',avatar:'🦸‍♂️',pitch:0.8,rate:0.9,msg:'مرحباً أيها البطل! أنا سوبر مان، هيا نتعلم معاً!'},
+  {id:'masha',name:'ماشا',avatar:'👧',pitch:1.9,rate:1.05,msg:'مرحباً! أنا ماشا! هيا نلعب ونتعلم أسرع!'},
+  {id:'coco',name:'جيه جيه',avatar:'👶',pitch:1.5,rate:0.85,msg:'أهلاً يا صديقي! أنا جيه جيه، هيا نكتشف الأشياء!'}
+];
+let curChar=chars[0];
+const praises=["ممتاز!","رائع جداً!","بطل يا بطل!","أحسنت يا ذكي!"];
+let pIdx=0;
+
+const questions=[
+  {
+    q:"إيش نسوي بالكرسي؟",
+    img:"https://images.unsplash.com/photo-1580481077195-c328a37db71a?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"أنام",img:"https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أجلس",img:"https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=500&q=80",c:true},
+      {t:"ألعب",img:"https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=500&q=80",c:false}
+    ]
+  },
+  {
+    q:"إيش نسوي بالسرير؟",
+    img:"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"أنام",img:"https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=500&q=80",c:true},
+      {t:"آكل",img:"https://images.unsplash.com/photo-1576867757603-05b134ebc379?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أتروش",img:"https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=500&q=80",c:false}
+    ]
+  },
+  {
+    q:"إيش نسوي بالملعقة؟",
+    img:"https://images.unsplash.com/photo-1619685297316-c5f3da7a9221?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"أشوط",img:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أرسم",img:"https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"آكل",img:"https://images.unsplash.com/photo-1576867757603-05b134ebc379?auto=format&fit=crop&w=500&q=80",c:true}
+    ]
+  },
+  {
+    q:"إيش نسوي بالمشط؟",
+    img:"https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"أمشط شعري",img:"https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=500&q=80",c:true},
+      {t:"أغسل يدي",img:"https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"آكل",img:"https://images.unsplash.com/photo-1576867757603-05b134ebc379?auto=format&fit=crop&w=500&q=80",c:false}
+    ]
+  },
+  {
+    q:"إيش نسوي بالقلم؟",
+    img:"https://images.unsplash.com/photo-1585336261026-77897255152b?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"أقص",img:"https://images.unsplash.com/photo-1503792501406-2c40da09e1e2?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أكتب",img:"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=500&q=80",c:true},
+      {t:"أشرب",img:"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80",c:false}
+    ]
+  },
+  {
+    q:"إيش نسوي بالكوب؟",
+    img:"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+    opts:[
+      {t:"آكل",img:"https://images.unsplash.com/photo-1576867757603-05b134ebc379?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أكتب",img:"https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=500&q=80",c:false},
+      {t:"أشرب",img:"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=500&q=80",c:true}
+    ]
+  }
+];
+
+let curQ=0;
+let canAns=true;
+
+function speak(text,cb){
+  if(!('speechSynthesis' in window)){if(cb)cb();return;}
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ar-SA';
+  u.rate=curChar.rate||0.9;
+  u.pitch=curChar.pitch||1.2;
+  const vs=window.speechSynthesis.getVoices();
+  const v=vs.find(x=>x.lang.startsWith('ar'));
+  if(v)u.voice=v;
+  if(cb)u.onend=cb;
+  window.speechSynthesis.speak(u);
+}
+
+function playCheer(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const t=ctx.currentTime;
+    [261,329,392,523].forEach((f,i)=>{
+      const osc=ctx.createOscillator();
+      const g=ctx.createGain();
+      osc.type='triangle';
+      osc.frequency.setValueAtTime(f,t+i*0.1);
+      g.gain.setValueAtTime(0.3,t+i*0.1);
+      g.gain.exponentialRampToValueAtTime(0.01,t+i*0.1+0.3);
+      osc.connect(g);g.connect(ctx.destination);
+      osc.start(t+i*0.1);osc.stop(t+i*0.1+0.3);
+    });
+  }catch(e){}
+}
+
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function initChars(){
+  const g=document.getElementById('char-list');
+  g.innerHTML='';
+  chars.forEach((c,i)=>{
+    const d=document.createElement('div');
+    d.className=`char-card ${i===0?'selected':''}`;
+    d.onclick=()=>{
+      curChar=c;
+      document.querySelectorAll('.char-card').forEach(x=>x.classList.remove('selected'));
+      d.classList.add('selected');
+      speak(c.msg);
+    };
+    d.innerHTML=`<div class="char-avatar">${c.avatar}</div><strong>${c.name}</strong>`;
+    g.appendChild(d);
+  });
+}
+
+function start(){
+  curQ=0;
+  show('s-game');
+  document.getElementById('c-badge').innerText=curChar.avatar;
+  document.getElementById('c-name').innerText=curChar.name;
+  loadQ(curQ);
+}
+
+function loadQ(idx){
+  canAns=true;
+  document.getElementById('b-next').classList.add('hidden');
+  document.getElementById('f-msg').innerText="اختر الصورة الصحيحة 😊";
+  document.getElementById('f-msg').style.color="var(--primary-dark)";
+  const q=questions[idx];
+  document.getElementById('p-text').innerText=`السؤال ${idx+1} من ${questions.length}`;
+  document.getElementById('p-fill').style.width=`${(idx/questions.length)*100}%`;
+  document.getElementById('t-img').src=q.img;
+  document.getElementById('q-bubble').innerText=q.q;
+  const grid=document.getElementById('c-grid');
+  grid.innerHTML='';
+  q.opts.forEach(o=>{
+    const card=document.createElement('div');
+    card.className='choice';
+    card.innerHTML=`<img src="${o.img}" alt="${o.t}" /><strong>${o.t}</strong>`;
+    card.onclick=()=>pick(o,card);
+    grid.appendChild(card);
+  });
+  setTimeout(speakQ,400);
+}
+
+function speakQ(){
+  speak(questions[curQ].q);
+}
+
+function pick(opt,card){
+  if(!canAns)return;
+  if(opt.c){
+    canAns=false;
+    card.classList.add('correct');
+    const p=praises[pIdx%praises.length];
+    pIdx++;
+    document.getElementById('f-msg').innerText=`${p} إجابة صحيحة 🌟`;
+    document.getElementById('f-msg').style.color="var(--success)";
+    playCheer();
+    speak(p,()=>{
+      if(curQ<questions.length-1){
+        document.getElementById('b-next').classList.remove('hidden');
+      }else{
+        setTimeout(finish,1200);
+      }
+    });
+  }else{
+    card.classList.add('wrong');
+    document.getElementById('f-msg').innerText="حاول ثانية يا بطل! 💪";
+    document.getElementById('f-msg').style.color="var(--warning)";
+    speak("حاول مرة ثانية يا بطل!");
+    setTimeout(()=>card.classList.remove('wrong'),800);
+  }
+}
+
+function nextQ(){
+  if(curQ<questions.length-1){
+    curQ++;
+    loadQ(curQ);
+  }else{
+    finish();
+  }
+}
+
+function finish(){
+  show('s-finish');
+  playCheer();
+  speak("أحسنت يا بطل الأبطال! لقد أتممت التدريب بنجاح!");
+}
+
+function restart(){
+  curQ=0;
+  show('s-welcome');
+}
+
+window.onload=initChars;
+</script>
+</body>
+</html>
